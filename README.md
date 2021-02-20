@@ -1,5 +1,5 @@
 # pico-console
-A small interactive computer made with a raspberry pi pico, a joystick, a display and some buttons
+A small console made with a raspberry pi pico, a peizo buzzer, a joystick, a display and some buttons
 
 <br>
 
@@ -7,7 +7,9 @@ A small interactive computer made with a raspberry pi pico, a joystick, a displa
 
 Raspberry Pi Pico (RP2040)
 
-0.95 inch SPI Full Color OLED Display Module SSD1331 96X64 LCD
+Passive Piezo Electric Buzzer
+
+<a href="https://www.banggood.com/Geekcreit-0_96-Inch-4Pin-White-IIC-I2C-OLED-Display-Module-12864-LED-Geekcreit-for-Arduino-products-that-work-with-official-Arduino-boards-p-958196.html">0.96" White 4 wire SPI OLED Display Module SSD1306 128X64</a>
 
 Joystick - Sparkfun COM-09426
 
