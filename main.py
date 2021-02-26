@@ -115,6 +115,15 @@ controller = controller(analogs=[
 
 
 creations = os.listdir('/creations/')
+
+#Remove non .py files from creations array
+i = 0
+while (i < len(creations)):
+    if (not (".py" in creations[i])):
+        creations.pop(i)
+    else:
+        i = i + 1
+    
 creation = None
 
 mainMenu = True
@@ -178,11 +187,34 @@ autorunFile = open('autorun', 'r')
 c = autorunFile.read()
 if (not (c == '')):
     cursor = int(c)
+    if (cursor >= len(creations)):
+        cursor = len(creations)-1
     onSelect()
 autorunFile.close()
 
-while True:    
+moveCooldown = 0
+
+while True:
+    frame = frame + 1
     if (mainMenu):
+        if (moveCooldown > 0):
+            moveCooldown = moveCooldown - 1
+        
+        joy = controller.readJoystick()
+        if (joy[2] and (moveCooldown <= 0) and (abs(joy[0]) > abs(joy[1]))):
+            moveCooldown = 8
+            if (joy[0] > 0):
+                #up
+                cursor = cursor + 1
+                if (cursor >= len(creations)):
+                    cursor = 0
+            else:
+                #down
+                cursor = cursor - 1
+                if (0 > cursor):
+                    cursor = len(creations)-1
+                
+        
         display.fill(0)
         if (not (thumbnails[cursor] is None)):
             display.blit(thumbnails[cursor],display.width-40,16,0)
@@ -212,4 +244,11 @@ while True:
     else:
         #Run loaded creation
         creation.tick()
-        sleep(0.0166)
+        
+        if (frame > 300):
+            try:
+                creation.close()
+            except Exception:
+                pass
+            creation = None
+            mainMenu = True
