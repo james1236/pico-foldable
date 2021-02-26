@@ -1,7 +1,8 @@
 # Initializes display and shows menus
-# Put python files you want to run in /creations/ and they will automatically show up in the menu
+# Put creations you want to run in /creations/ and they will automatically show up in the menu
+# Look at demo.py for an example of how to make a creation
 
-from machine import Pin, I2C
+from machine import Pin, I2C, ADC
 from ssd1306 import SSD1306_I2C
 
 from time import sleep
@@ -65,7 +66,53 @@ class display:
         self.fill_rect(0+x,height-1+y,width,1,color)
         self.fill_rect(0+x,0+y,1,height,color)
 
+
 display = display(oled,"SSD1306 Monochrome")
+
+#Class for creations to use input
+class controller:
+    def __init__(self, analogs, buttons, joyscale=1000, deadzone=10):
+        self.joystick = False
+        self.joyscale = joyscale
+        self.deadzone = deadzone
+        
+        if (len(analogs) >= 2):
+            #Use analogs as joystick
+            self.joyX = analogs[0]
+            self.joyY = analogs[1]
+            
+            self.joystick = True
+            self.joyCenter = (self.joyX.read_u16(),self.joyY.read_u16())
+            
+        self.buttons = buttons
+            
+    def readJoystick(self):
+        x = self.joyX.read_u16() - self.joyCenter[0]
+        y = self.joyY.read_u16() - self.joyCenter[1]
+        
+        x = x / self.joyscale
+        y = y / self.joyscale
+        
+        outsideDeadzone = False
+        if (abs(x) > self.deadzone or abs(y) > self.deadzone):
+            outsideDeadzone = True
+            
+        return (x, y, outsideDeadzone)
+    
+    
+    def readButton(self, buttonNumber):
+        pass #return self.buttons[buttonNumber]
+        
+
+
+
+controller = controller(analogs=[
+    ADC(Pin(26)),
+    ADC(Pin(27))
+], buttons=[
+    #machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+])
+
 
 creations = os.listdir('/creations/')
 creation = None
@@ -123,7 +170,7 @@ def onSelect():
     autorunFile.close()
     
     exec("from creations.%s import creation" % creations[cursor].replace('.py',''))
-    creation = creation(display)
+    creation = creation(display, controller)
     mainMenu = False
     
 #Try to auto open previous creation
