@@ -98,6 +98,7 @@ class creation:
                 self.board[y].append(0)
         
         self.score = 0
+        self.moveCooldownDefault = 7
         self.level = 0
         self.linesCleared = 0
         self.boardX = 95
@@ -142,8 +143,8 @@ class creation:
         self.display.show()
         
     def close(self): #Called by main.py when it must exit back to main menu
-        self.mySong.stop()
-        self.musicPlaying = False
+        mySong.stop()
+        musicPlaying = False
         #utime.sleep(0.03) #Sleep to be sure other thread has ended
         
     def takePiece(self):
@@ -178,6 +179,18 @@ class creation:
             
             #Increase level only after score is calculated
             self.level = int(self.linesCleared / 10)
+            #Reset delay between drops
+            self.frame = 0
+            
+            #Change time between piece drops depending on level
+            if (5 >= self.level):
+                self.stepDelay = (40-(self.level*4))
+            elif (10 >= self.level):
+                self.stepDelay = (20-((self.level-5)*2))
+            else:
+                self.stepDelay = max(1,10-(self.level-10))
+                
+            self.moveCooldownDefault = max(-3,7-int(self.level/2))
             
             #Highscore calc
             if (self.score > self.highscore):
@@ -206,7 +219,7 @@ class creation:
         
         #Stop soft drop from last piece
         joy = self.controller.readJoystick()
-        if (joy[2] and (not (joy[1] > 0))):
+        if (joy[2] and (not (joy[0] > 0))): #X and Y swapped since the game is played horizontally
             self.allowSoftDrop = False
         
     def rotate(self, direction):
@@ -325,8 +338,9 @@ class creation:
         
         #Out of deadzone
         if (joy[2]):
-            x = joy[0]
-            y = joy[1]
+            #X and Y swapped since the game is played horizontally
+            x = joy[1]
+            y = joy[0]
             if (abs(x) > abs(y)):
                 self.allowSoftDrop = True
             if (y > 0):
@@ -335,7 +349,7 @@ class creation:
             if (self.moveCooldown <= 0):
                 #Find primary direction
                 if (abs(x) > abs(y)):
-                    self.moveCooldown = 7
+                    self.moveCooldown = self.moveCooldownDefault
                     if (x > 0):
                         #right
                         movement = 1
@@ -367,7 +381,7 @@ class creation:
                         #up
                         #Rotate
                         if (self.moveCooldown <= -5):
-                            self.moveCooldown = 7
+                            self.moveCooldown = self.moveCooldownDefault
                             oldPieceTransform = pieces[self.pieceRotation][self.pieceType]
                             oldPiecePos = self.piecePos
                             
@@ -382,6 +396,8 @@ class creation:
                             #self.score = self.score + 1
         else:
             self.allowSoftDrop = True
+            #Disable cooldown when stick is moved back to neutral
+            self.moveCooldown = -5
                 
         
         if (self.frame % self.stepDelay == 0):
@@ -401,7 +417,10 @@ class creation:
             self.display.show()
         self.frame = self.frame + 1
         
-        mySong.tick()
+        try:
+            mySong.tick()
+        except Exception:
+            pass
         
         while (utime.ticks_us() - start_time < 20000):
             pass

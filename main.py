@@ -10,6 +10,10 @@ import os
 
 import framebuf
 
+#Set to True to disable error handling and throw errors instead
+#Highly reccomended to set to True while programming
+debug = False
+
 #Stop any previous music PWM
 from buzzer_music import music
 music().stop()
@@ -101,16 +105,17 @@ class controller:
     
     
     def readButton(self, buttonNumber):
-        pass #return self.buttons[buttonNumber]
+        return self.buttons[buttonNumber].value()
         
 
 
 
 controller = controller(analogs=[
-    ADC(Pin(26)),
-    ADC(Pin(27))
+    ADC(Pin(27)),
+    ADC(Pin(26))
 ], buttons=[
-    #machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    Pin(2, machine.Pin.IN, machine.Pin.PULL_UP),
+    Pin(3, machine.Pin.IN, machine.Pin.PULL_UP)
 ])
 
 
@@ -161,6 +166,40 @@ for filename in creations:
         del description
     i = i + 1
 
+
+#Handle errors thrown by creations so that they can be dropped back to main menu
+#Disable by setting debug = True
+def errorHan(e):
+    global debug
+    global mainMenu
+    global creation
+    global display
+    
+    if (debug):
+        raise e
+        return
+
+    e = repr(e)
+    print(e)
+    print("Set debug = True in main.py to throw exceptions...")
+    
+    #Split exception string into screen width strings
+    n = int(display.width/8)
+    o = []
+    while e:
+        o.append(e[:n])
+        e = e[n:]
+    
+    display.fill(0)
+    for i in range(len(o)):
+        display.text(o[i],0,10+(i*8))
+        
+    display.show()
+    sleep(5)
+    creation = None
+    mainMenu = True
+    music().stop()
+
 #Function to load into the selected creation
 def onSelect():
     global creations
@@ -179,8 +218,12 @@ def onSelect():
     autorunFile.close()
     
     exec("from creations.%s import creation" % creations[cursor].replace('.py',''))
-    creation = creation(display, controller)
+    
     mainMenu = False
+    try:
+        creation = creation(display, controller)
+    except Exception as e:
+        errorHan(e)
     
 #Try to auto open previous creation
 autorunFile = open('autorun', 'r')
@@ -194,16 +237,24 @@ autorunFile.close()
 
 moveCooldown = 0
 
+buttonCooldowns = [0,0]
+buttonCooldown = 100
+
 while True:
     frame = frame + 1
+    
+    buttonCooldowns[0] = max(0, (buttonCooldowns[0] - 1))
+    buttonCooldowns[1] = max(0, (buttonCooldowns[1] - 1))
+    
     if (mainMenu):
+        #Move cursor
         if (moveCooldown > 0):
             moveCooldown = moveCooldown - 1
         
         joy = controller.readJoystick()
-        if (joy[2] and (moveCooldown <= 0) and (abs(joy[0]) > abs(joy[1]))):
+        if (joy[2] and (moveCooldown <= 0) and (abs(joy[1]) > abs(joy[0]))):
             moveCooldown = 8
-            if (joy[0] > 0):
+            if (joy[1] > 0):
                 #up
                 cursor = cursor + 1
                 if (cursor >= len(creations)):
@@ -213,7 +264,13 @@ while True:
                 cursor = cursor - 1
                 if (0 > cursor):
                     cursor = len(creations)-1
-                
+            
+        #Detect button press
+        select = False
+        if (buttonCooldowns[0] == 0):
+            if (not controller.readButton(0)):
+                buttonCooldowns[0] = buttonCooldown
+                select = True
         
         display.fill(0)
         if (not (thumbnails[cursor] is None)):
@@ -241,14 +298,23 @@ while True:
                 
         display.show()
         
+        if (select):
+            onSelect()
+        
     else:
         #Run loaded creation
-        creation.tick()
+        try:
+            creation.tick()
+        except Exception as e:
+            errorHan(e)
         
-        if (frame > 300):
-            try:
-                creation.close()
-            except Exception:
-                pass
-            creation = None
-            mainMenu = True
+        #Exit creation on button press
+        if (buttonCooldowns[0] == 0):
+            if (not controller.readButton(0)):
+                buttonCooldowns[0] = buttonCooldown
+                try:
+                    creation.close()
+                except Exception:
+                    pass
+                creation = None
+                mainMenu = True
