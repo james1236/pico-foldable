@@ -1,5 +1,5 @@
-# pico-console
-A small console made with a raspberry pi pico, a peizo buzzer, a joystick, a display and some buttons
+# pico-foldable
+A small foldable raspberry pi pico console with a peizo buzzer, a joystick, a display and some buttons
 
 <br>
 
@@ -9,8 +9,20 @@ Raspberry Pi Pico (RP2040)
 
 Passive Piezo Electric Buzzer
 
-<a href="https://www.banggood.com/Geekcreit-0_96-Inch-4Pin-White-IIC-I2C-OLED-Display-Module-12864-LED-Geekcreit-for-Arduino-products-that-work-with-official-Arduino-boards-p-958196.html">0.96" White 4 wire SPI OLED Display Module SSD1306 128X64</a>
+Adafruit Powerboost 500C
+
+Female MicroUSB Breakout Board
+
+FFC (Flexible flat cable) from RPI camera module
+
+3mm dia x 1mm tick Neodynium magnets with 0.13kg pull x4
+
+<a href="https://www.waveshare.com/1.5inch-OLED-Module.htm">128x128, Waveshare 1.5inch OLED display Module I2C Mode SSD1327</a>
 
 Joystick - Sparkfun COM-09426
 
-Momentary Tactile PCB Push Buttons 6mm x 6mm
+2x Momentary Tactile PCB Push Buttons 6mm x 6mm
+
+500mAh 3.7V LiPo Battery
+
+1x 330 Ohm Resistor
