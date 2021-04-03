@@ -116,7 +116,7 @@ class creation:
         startMusic()
         
         self.display.fill(0)
-        self.display.blit(background,0,0,0)
+        self.display.blit(background,0,0,1)
         
         #Draw score
         self.display.fill_rect(50,0,len(str(self.score))*8,8,0)
@@ -190,7 +190,8 @@ class creation:
             else:
                 self.stepDelay = max(1,10-(self.level-10))
                 
-            self.moveCooldownDefault = max(-3,7-int(self.level/2))
+            #Speed up input on later levels
+            self.moveCooldownDefault = max(-3,7-int(self.level/3))
             
             #Highscore calc
             if (self.score > self.highscore):
@@ -311,12 +312,16 @@ class creation:
         
     def drawPiece(self, pieceTransform, piecePos, color=1):
         self.show = True # Tell display to draw changes at end of frame
+        
+        if (color == 1):
+            color = min(1,0.1+((self.pieceType)/7))
+        
         for seg in range(4):
             segTransform = pieceTransform[seg]
             x = segTransform[0] + piecePos[0]
             y = segTransform[1] + piecePos[1]
             if (0 <= x <= 9 and 0 <= y <= 19):
-                self.drawSeg(x,y,color)
+                self.drawSeg(x,y,color) #Shade according to piece type
                 
     def drawBoard(self):
         self.show = True
@@ -424,3 +429,4 @@ class creation:
         
         while (utime.ticks_us() - start_time < 20000):
             pass
+
