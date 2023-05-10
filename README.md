@@ -26,3 +26,13 @@ Joystick - Sparkfun COM-09426
 500mAh 3.7V LiPo Battery
 
 1x 330 Ohm Resistor
+
+### Ribbon Cable Wires
+1. bat 3.7
+2. GND
+3. speaker
+4. button 1
+5. button 2
+6. x
+7. y
+8. VCC
