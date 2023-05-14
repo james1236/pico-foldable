@@ -25,14 +25,23 @@ Joystick - Sparkfun COM-09426
 
 500mAh 3.7V LiPo Battery
 
-1x 330 Ohm Resistor
+1x 500 Ohm Resistor for buzzer
 
 ### Ribbon Cable Wires
 1. bat 3.7
 2. GND
-3. speaker
+3. buzzer - 500 ohm resistor
 4. button 1
 5. button 2
 6. x
 7. y
 8. VCC
+
+### Pico Wires
+||
+|---|
+|TP2 (Test pad 2) -> USB Breakout Data Minus (DM or D-)|
+|TP3 (Test pad 3) -> USB Breakout Data Plus (DP or D+)|
+|GP0  (physical 1) -> 500 ohm resistor -> buzzer (ribbon wire 3)|
+|GP16 (physical 21) -> SDA (DIN) Display|
+|GP17 (physical 22)-> SCK (CLK) Display|
