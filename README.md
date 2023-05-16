@@ -40,8 +40,15 @@ Joystick - Sparkfun COM-09426
 ### Pico Wires
 ||
 |---|
-|TP2 (Test pad 2) -> USB Breakout Data Minus (DM or D-)|
-|TP3 (Test pad 3) -> USB Breakout Data Plus (DP or D+)|
-|GP0  (physical 1) -> 500 ohm resistor -> buzzer (ribbon wire 3)|
-|GP16 (physical 21) -> SDA (DIN) Display|
-|GP17 (physical 22)-> SCK (CLK) Display|
+|Pico pin TP2 (Test pad 2) -> USB Breakout Data Minus (DM or D-)|
+|Pico pin TP3 (Test pad 3) -> USB Breakout Data Plus (DP or D+)|
+|Pico pin 1 (GP0) -> 500 ohm resistor -> buzzer (ribbon wire 3)|
+|Pico pin 21 (GP16) -> SDA (DIN) Display|
+Pico pin 22 (GP17)-> SCK (CLK) Display|
+|Pico pin 40 (VBUS) -> Powerboost 500c USB positive pad|
+|Pico pin 36 (3V3 OUT) -> VCC Display|
+|Pico pin 33 (GND) -> Powerboost 500c USB negative pad|
+|Pico pin 28 (GND) -> USB Breakout GND|
+|Pico pin 18 (GND) -> GND Display|
+|Pico pin 13 (GND) -> Bottom half ground (ribbon wire 2)|
+
