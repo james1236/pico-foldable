@@ -37,6 +37,22 @@ Joystick - Sparkfun COM-09426
 7. y
 8. VCC
 
+### Ribbon internals
+|External|Internal|
+|---|---|
+|1|1|
+|2|2, 3|
+|3|5, 6|
+|4|7, 8|
+|5|9, 10|
+|6|11, 12|
+|7|13, 14|
+|8|15|
+
+
+
+
+
 ### Pico Wires
 ||
 |---|
