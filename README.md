@@ -13,7 +13,8 @@ Adafruit Powerboost 500C
 
 Female MicroUSB Breakout Board
 
-FFC (Flexible flat cable) from RPI camera module
+~~FFC (Flexible flat cable) from RPI camera module~~
+10 out flexible rainbow ribbon cable
 
 3mm dia x 1mm tick Neodynium magnets with 0.13kg pull x4
 
@@ -28,29 +29,16 @@ Joystick - Sparkfun COM-09426
 1x 500 Ohm Resistor for buzzer
 
 ### Ribbon Cable Wires
-1. bat 3.7
-2. GND
-3. buzzer - 500 ohm resistor
-4. button 1
-5. button 2
-6. x
-7. y
-8. VCC
-
-### Ribbon internals
-|External|Internal|
-|---|---|
-|1|1|
-|2|2, 3|
-|3|5, 6|
-|4|7, 8|
-|5|9, 10|
-|6|11, 12|
-|7|13, 14|
-|8|15|
-
-
-
+|Num|Color|Connection|
+|---|---|---|
+|1|brown|bat 3.7|
+|2|red|GND|
+|3|orange|buzzer - 500 ohm resistor|
+|4|yellow|button 1|
+|5|green|button 2|
+|6|blue|x|
+|7|purple|y|
+|8|gray|VCC|
 
 
 ### Pico Wires
