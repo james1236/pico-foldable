@@ -194,7 +194,7 @@ class controller:
             if (abs(x) > self.deadzone or abs(y) > self.deadzone):
                 outsideDeadzone = True
                 
-            return (x, y, outsideDeadzone)
+            return (-x, y, outsideDeadzone)
         
         else:
             #Emulate non existant joystick with buttons
@@ -244,8 +244,8 @@ controller = controller(analogs=[
     ADC(Pin(27)),
     ADC(Pin(26))
 ], buttons=[
-    Pin(2, machine.Pin.IN, machine.Pin.PULL_UP),
-    Pin(3, machine.Pin.IN, machine.Pin.PULL_UP)
+    Pin(14, machine.Pin.IN, machine.Pin.PULL_UP),
+    Pin(15, machine.Pin.IN, machine.Pin.PULL_UP)
 ])
 
 #controller = controller(picodisplay=display)
@@ -381,23 +381,26 @@ autorunFile.close()
 moveCooldown = 0
 
 buttonCooldowns = [0,0]
-buttonCooldown = 30
+buttonCooldown = 5
 
 heldDown = 0
 
+led = Pin(25, Pin.OUT) #Blink led to show it's alive
+
 while True:
     frame = frame + 1
+    led.toggle()
     
     buttonCooldowns[0] = max(0, (buttonCooldowns[0] - 1))
     buttonCooldowns[1] = max(0, (buttonCooldowns[1] - 1))
     
-    #Hold down both buttons for 60 frames to exit to main menu
+    #Hold down both buttons for 30 frames to exit to main menu
     if (controller.readButton(0) and controller.readButton(1)):
         heldDown = heldDown + 1
-        if (heldDown > 60):
+        if (heldDown > 30):
             heldDown = 0
-            buttonCooldowns[0] = 50
-            buttonCooldowns[1] = 50
+            buttonCooldowns[0] = 15
+            buttonCooldowns[1] = 15
             
             if (not(creation is None)):
                 try:
@@ -417,7 +420,7 @@ while True:
         
         joy = controller.readJoystick()
         if (joy[2] and (moveCooldown <= 0) and (abs(joy[1]) > abs(joy[0]))):
-            moveCooldown = 20
+            moveCooldown = 5
             if (joy[1] > 0):
                 #up
                 cursor = cursor + 1

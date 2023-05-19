@@ -20,6 +20,7 @@ class creation:
     def tick(self):
         #Display joystick read info
         joy = self.controller.readJoystick()
+        but = [self.controller.readButton(0), self.controller.readButton(1)]
         
         self.display.fill_rect(0,0,self.display.width,10,0)
         
@@ -30,6 +31,13 @@ class creation:
             y = self.center[1] + round(joy[1])
             
             self.display.pixel(x,y,1)
+            
+        self.display.fill_rect(0,self.display.height-10,20,self.display.height-10, 0)
+        
+        if (but[0]):
+            self.display.text("A",0,self.display.height-10)
+        if (but[1]):
+            self.display.text("B",10,self.display.height-10)
             
         self.display.show()
 
