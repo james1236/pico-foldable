@@ -39,14 +39,24 @@ A small ds-style foldable raspberry pi pico console with a buzzer, a joystick, a
 |---|---|
 |Pico TP2 (Test pad 2)|USB Breakout Data Minus (DM or D-)|
 |Pico TP3 (Test pad 3)|USB Breakout Data Plus (DP or D+)|
+|Powerboost 500c BAT|Battery positive (ribbon wire 1)|
+|Powerboost 500c USB|USB Breakout VCC positive|
+
 |Pico pin 1 (GP0)|500 ohm resistor -> buzzer (ribbon wire 3)|
 |Pico pin 21 (GP16)|Display SDA (DIN)|
 |Pico pin 22 (GP17)|Display SCK (CLK)|
 |Pico pin 40 (VBUS)|Powerboost 500c USB positive pad|
+|Pico pin 39 (VSYS)|VCC (ribbon wire 8)|
 |Pico pin 36 (3V3 OUT)|Display VCC|
 |Pico pin 33 (GND)|Powerboost 500c USB negative pad|
 |Pico pin 28 (GND)|USB Breakout GND|
 |Pico pin 18 (GND)|Display GND|
 |Pico pin 13 (GND)|Bottom half GND (ribbon wire 2)|
+|Pico pin 33 (ADC0)|Joystick X (ribbon wire 6)|
+|Pico pin 34 (ADC1)|Joystick Y (ribbon wire 7)|
+|Pico pin 19 (GP14)|Left button (ribbon wire 4)|
+|Pico pin 20 (GP15)|Right button (ribbon wire 5)|
+
 |Magnet|Powerboost 500c EN (enable)|
+
 
