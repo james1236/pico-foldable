@@ -1,5 +1,7 @@
 # pico-foldable
-A small ds-style foldable raspberry pi pico console with a buzzer, a joystick, a display and some buttons. Battery powered, turns on when opened.
+A small ds-style foldable Raspberry Pi Pico console with a buzzer, a joystick, a display and some buttons. You can easily create and add new games as seperate files in /creations/ and a game picking menu/autorun system lets you play them (hold both buttons to get to the menu). The 3D printed case prints in 4 seperate parts and has a print-in-place hinge.
+
+It is powered by a 3.7v LiPo battery through the adafruit Powerboost 500c recharger/power supply board. The EN (enable) pin on this board allows a circuit across the magnets between both displays to turn the whole device on when opened. A MicroUSB breakout board is installed to direct power to the Powerboost 500c while directing the data lines straight to the Pico's test pads, allowing you to plug it in as usual to upload code or debug.
 
 ### Parts
 |Part|Quantity|
@@ -33,30 +35,38 @@ A small ds-style foldable raspberry pi pico console with a buzzer, a joystick, a
 |Output|Input|
 |---|---|
 |Magnet|GND (ribbon wire 2)|
+|Left Button|GND (ribbon wire 2)|
+|Right Button|GND (ribbon wire 2)|
+|Joystick GND|GND (ribbon wire 2)|
+|Buzzer -|GND (ribbon wire 2)|
+|LiPo Battery negative (black) wire|GND (ribbon wire 2)|
+|LiPo Battery positive (red) wire|bat 3.7 (ribbon wire 1)|
+|Buzzer +|buzzer wire (ribbon wire 3)|
+|Left Button (opposite half)|left button wire (ribbon wire 4)|
+|Right Button (opposite half)|right button wire (ribbon wire 5)|
+|Joystick X|joystick X wire (ribbon wire 6)|
+|Joystick Y|joystick Y wire (ribbon wire 7)|
+|Joystick VCC|VCC (ribbon wire 8)|
 
 ### Top Half Wires
 |Output|Input|
 |---|---|
-|Pico TP2 (Test pad 2)|USB Breakout Data Minus (DM or D-)|
-|Pico TP3 (Test pad 3)|USB Breakout Data Plus (DP or D+)|
+|Powerboost 500c EN (enable)|Magnet|
 |Powerboost 500c BAT|Battery positive (ribbon wire 1)|
 |Powerboost 500c USB|USB Breakout VCC positive|
-
-|Pico pin 1 (GP0)|500 ohm resistor -> buzzer (ribbon wire 3)|
-|Pico pin 21 (GP16)|Display SDA (DIN)|
-|Pico pin 22 (GP17)|Display SCK (CLK)|
+|Pico pin 28 (GND)|USB Breakout GND negative|
 |Pico pin 40 (VBUS)|Powerboost 500c USB positive pad|
-|Pico pin 39 (VSYS)|VCC (ribbon wire 8)|
-|Pico pin 36 (3V3 OUT)|Display VCC|
 |Pico pin 33 (GND)|Powerboost 500c USB negative pad|
-|Pico pin 28 (GND)|USB Breakout GND|
-|Pico pin 18 (GND)|Display GND|
+|Pico TP2 (Test pad 2)|USB Breakout Data Minus (DM or D-)|
+|Pico TP3 (Test pad 3)|USB Breakout Data Plus (DP or D+)|
 |Pico pin 13 (GND)|Bottom half GND (ribbon wire 2)|
-|Pico pin 33 (ADC0)|Joystick X (ribbon wire 6)|
-|Pico pin 34 (ADC1)|Joystick Y (ribbon wire 7)|
+|Pico pin 1 (GP0)|500 ohm resistor -> buzzer (ribbon wire 3)|
 |Pico pin 19 (GP14)|Left button (ribbon wire 4)|
 |Pico pin 20 (GP15)|Right button (ribbon wire 5)|
-
-|Magnet|Powerboost 500c EN (enable)|
-
-
+|Pico pin 33 (ADC0)|Joystick X (ribbon wire 6)|
+|Pico pin 34 (ADC1)|Joystick Y (ribbon wire 7)|
+|Pico pin 39 (VSYS)|VCC (ribbon wire 8)|
+|Pico pin 21 (GP16)|Display SDA (DIN)|
+|Pico pin 22 (GP17)|Display SCK (CLK)|
+|Pico pin 36 (3V3 OUT)|Display VCC|
+|Pico pin 18 (GND)|Display GND|
