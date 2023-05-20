@@ -1,7 +1,22 @@
 # pico-foldable
-A small ds-style foldable Raspberry Pi Pico console with a buzzer, a joystick, a display and some buttons. You can easily create and add new games as seperate files in /creations/ and a game picking menu/autorun system lets you play them (hold both buttons to get to the menu). The 3D printed case prints in 4 seperate parts and has a print-in-place hinge.
+A small ds-style foldable Raspberry Pi Pico console with a buzzer, a joystick, a display and some buttons. You can easily create and add new games as seperate files in [/creations/](./creations) and a game picking menu/autorun system lets you play them (hold both buttons to get to the menu). The 3D printed case prints in 5 seperate prints and has a print-in-place hinge.
+
+<p>
+    <img src="https://github.com/james1236/pico-foldable/assets/32351696/9d0a6abc-5b67-467e-b81d-890ebed0388c" hspace="5" width="22%">
+    <img src="https://github.com/james1236/pico-foldable/assets/32351696/9f8c85b8-f91b-49f8-83f5-2bb58d9d0914" hspace="5" width="22%">
+    <img src="https://github.com/james1236/pico-foldable/assets/32351696/b74bf623-ddfa-46ec-a7d2-50976fcb6a54" hspace="5" width="22%">
+    <img src="https://github.com/james1236/pico-foldable/assets/32351696/8c3868cd-134a-4ad1-ab15-f749ec9a26fd" hspace="5" width="22%">
+</p>
 
 It is powered by a 3.7v LiPo battery through the adafruit Powerboost 500c recharger/power supply board. The EN (enable) pin on this board allows a circuit across the magnets between both displays to turn the whole device on when opened. A MicroUSB breakout board is installed to direct power to the Powerboost 500c while directing the data lines straight to the Pico's test pads, allowing you to plug it in as usual to upload code or debug.
+  
+  | ![image](https://github.com/james1236/pico-foldable/assets/32351696/44b3f60a-3530-4519-ae03-977d827620c5) | ![image](https://github.com/james1236/pico-foldable/assets/32351696/934e8bf3-216b-4ffb-ba50-f164010f837c) ![image](https://github.com/james1236/pico-foldable/assets/32351696/ccd3c34d-ce71-40cc-b3b3-a8c42e955d2d) |
+| ----- | ----- |
+|     |  |
+
+![image](https://github.com/james1236/pico-foldable/assets/32351696/fb83f271-5d0a-4dfd-a70e-ba5e97ff7ab7)
+
+
 
 ### Parts
 |Part|Quantity|
