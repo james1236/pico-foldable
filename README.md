@@ -1,5 +1,5 @@
 # pico-foldable
-A small ds-style foldable Raspberry Pi Pico console with a buzzer, a joystick, a display and some buttons. You can easily create and add new games as seperate files in [/creations/](./creations) and a game picking menu/autorun system lets you play them (hold both buttons to get to the menu). The 3D printed case prints in 5 seperate prints and has a print-in-place hinge.
+A small ds-style foldable Raspberry Pi Pico console with a buzzer, a joystick, a display and some buttons. You can easily make new games as seperate files in [/creations/](./creations) and a game picking menu/autorun system lets you play them (hold both buttons to get to the menu). The 3D printed case prints in 4 main parts and has a print-in-place hinge.
 
 <p>
     <img src="https://github.com/james1236/pico-foldable/assets/32351696/9d0a6abc-5b67-467e-b81d-890ebed0388c" hspace="5" width="22%">
@@ -16,6 +16,7 @@ It is powered by a 3.7v LiPo battery through the adafruit Powerboost 500c rechar
 
 ![image](https://github.com/james1236/pico-foldable/assets/32351696/fb83f271-5d0a-4dfd-a70e-ba5e97ff7ab7)
 
+Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.stl).
 
 
 ### Parts
@@ -25,7 +26,6 @@ It is powered by a 3.7v LiPo battery through the adafruit Powerboost 500c rechar
 |Passive Piezo Electric Buzzer|1|
 |<a href="https://www.adafruit.com/product/1944">Adafruit Powerboost 500C</a>|1|
 |Female MicroUSB Breakout Board|1|
-|~~FFC (Flexible flat cable) from RPI camera module~~|0|
 |10 out flexible rainbow ribbon cable|1|
 |3mm dia x 1mm thick Neodynium magnets with 0.13kg pull|4|
 |<a href="https://www.waveshare.com/1.5inch-OLED-Module.htm">128x128, Waveshare 1.5inch OLED display Module I2C Mode SSD1327</a>|1|
