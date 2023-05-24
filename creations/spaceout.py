@@ -26,6 +26,7 @@ def musicThread():
 #Optional metadata for main menu
 class description:
     name = "Spaceout"
+    #32x32 Horizonal - 1 bit per pixel (https://javl.github.io/image2cpp/)
     thumbnail = bytearray(b"\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x03\x80\x00\x00\x03\x80\x00\x00\x03\x80\x00\x00\x03\x80\x00\x00\x07\xc0\x00\x00\x3f\xf8\x00\x00\x3f\xf8\x02\x00\x07\xc0\x02\x00\x03\x80\x02\x00\x03\x80\x02\x00\x03\x80\x07\x00\x03\x80\x07\x00\x01\x00\x1f\xc0\x01\x03\xff\xfe\x01\x00\x1f\xc0\x01\x00\x07\x00\x00\x00\x07\x00\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00\x02\x00\x00\x0c\x02\x00\x00\x0c\x02\x00\x00\x1e\x00\x00\x07\xff\xf8\x00\x00\x1e\x00\x00\x00\x0c\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
 
 #Required class named 'creation'
@@ -42,27 +43,44 @@ class creation:
         
         self.paddleWidth = 24
         self.paddlePos = int(self.display.width/2)
-        self.ballPos = [self.paddlePos, self.display.height - 12]
-        self.ballVel = [5, -5]
+        self.ballPos = [self.paddlePos + 4, self.display.height - 4]
+        self.speed = 7
+        self.ballVel = [0, 0]
         self.bricks = []
-        for y in range(6):
+        self.invertTimer = 0
+        self.deathTimer = 0
+
+        map = bytearray(b"\xc0\x00\xff\x00\xff\xfc\xfa\xaf\xf9\x6f\x09\x60\x0a\xa0\x00\x00\x33\x33\x33\x33\xcc\xcc\xcc\xcc\x00\x00\x3f\xfc\x3a\xac\x3a\xac\x3f\xfc\x00\x00\xaa\xaa\x00\x00\xcf\xcf\xcf\xcf\xcf\xcf\x00\x00\xff\xff")
+        self.bricksRemaining = 0
+
+        for y in range(int(len(map) / 2)):
             self.bricks.append([])
-            for x in range(int(128 / 16)):
-                self.bricks[len(self.bricks) - 1].append(1)
+            for x in range(8):
+                currentByte = map[(y * 2) + int(x / 4)]
+                val = 4 - (currentByte >> 6 - ((x % 4) * 2)) & 0b11
+                if (val == 4):
+                    val = 0
+                if (val > 0):
+                    self.bricksRemaining = self.bricksRemaining + 1
+                self.bricks[y].append(0 if val == 4 else val)
+
+        self.mapHeight = round(len(map) / 2)
+        self.vert = - self.mapHeight * 8 + 32
+        del map
         
         #Init music
         song = '124 A#5 4 22;0 B4 1 26;8 D5 1 26;16 F#5 1 26;24 E5 1 26;32 B5 1 26;36 F#5 1 26;40 D5 1 26;48 F#5 1 26;56 C#5 1 26;4 F#5 1 41;12 F#5 1 41;20 F#5 1 41;28 E5 1 41;28 E5 1 41;36 C#5 1 41;44 A4 1 41;52 C#5 1 41;0 B2 1 29;12 B2 1 29;24 A2 1 29;28 G#2 1 29;32 G2 1 29;20 B2 1 29;40 G2 1 29;48 F#2 1 29;56 A#2 1 29;4 F#3 1 29;6 F#4 1 32;5 D4 1 32;4 B3 1 32;7 D4 1 32;8 B3 1 32;9 D4 1 32;10 F#4 1 32;11 D4 1 32;12 F#4 1 32;13 A4 1 32;14 B4 1 32;15 A4 1 32;16 F#4 1 32;17 A4 1 32;18 C#5 1 32;19 A4 1 32;20 F#4 1 32;21 A4 1 32;22 E4 1 32;23 G#4 1 32;24 E4 1 32;25 G#4 1 32;26 B4 1 32;27 G#4 1 32;28 E4 1 32;29 G#4 1 32;30 B4 1 32;31 F#4 1 32;38 F#4 1 32;37 D4 1 32;36 B3 1 32;39 D4 1 32;40 B3 1 32;41 D4 1 32;42 F#4 1 32;43 D4 1 32;44 F#4 1 32;45 A4 1 32;46 B4 1 32;47 A4 1 32;48 F#4 1 32;49 A4 1 32;50 C#5 1 32;51 A4 1 32;52 F#4 1 32;53 A4 1 32;54 E4 1 32;55 G#4 1 32;56 E4 1 32;57 G#4 1 32;58 B4 1 32;59 G#4 1 32;60 E4 1 32;61 G#4 1 32;62 B4 1 32;63 F#4 1 32;32 B3 1 32;60 A#4 1 41;64 B4 1 26;72 D5 1 26;80 F#5 1 26;88 E5 1 26;96 B5 1 26;100 F#5 1 26;104 D5 1 26;112 F#5 1 26;120 C#5 1 26;68 F#5 1 41;76 F#5 1 41;84 F#5 1 41;92 E5 1 41;92 E5 1 41;100 C#5 1 41;108 A4 1 41;116 C#5 1 41;64 B2 1 29;76 B2 1 29;88 A2 1 29;92 G#2 1 29;96 G2 1 29;84 B2 1 29;104 G2 1 29;112 F#2 1 29;120 A#2 1 29;68 F#3 1 29;64 C#6 8 22;72 B5 16 22;88 F#6 4 22;92 E6 4 22;96 F#6 4 22;100 B5 12 22;116 B5 4 22;120 A5 4 22;70 F#4 1 32;69 D4 1 32;68 B3 1 32;71 D4 1 32;72 B3 1 32;73 D4 1 32;74 F#4 1 32;75 D4 1 32;76 F#4 1 32;77 A4 1 32;78 B4 1 32;79 A4 1 32;80 F#4 1 32;81 A4 1 32;82 C#5 1 32;83 A4 1 32;84 F#4 1 32;85 A4 1 32;86 E4 1 32;87 G#4 1 32;88 E4 1 32;89 G#4 1 32;90 B4 1 32;91 G#4 1 32;92 E4 1 32;93 G#4 1 32;94 B4 1 32;95 F#4 1 32;102 F#4 1 32;101 D4 1 32;100 B3 1 32;103 D4 1 32;104 B3 1 32;105 D4 1 32;106 F#4 1 32;107 D4 1 32;108 F#4 1 32;109 A4 1 32;110 B4 1 32;111 A4 1 32;112 F#4 1 32;113 A4 1 32;114 C#5 1 32;115 A4 1 32;116 F#4 1 32;117 A4 1 32;118 E4 1 32;119 G#4 1 32;120 E4 1 32;121 G#4 1 32;122 B4 1 32;123 G#4 1 32;124 E4 1 32;125 G#4 1 32;126 B4 1 32;127 F#4 1 32;96 B3 1 32;124 A#4 1 41'
         mySong = music(song,True,4)
         musicPlaying = True
         
+        
         #Run music on second thread
         musicThreadInstance = _thread.start_new_thread(musicThread, ())
-                
         
     def close(self): #Optional, called by main.py when it must exit back to main menu
         global musicPlaying
         musicPlaying = False
-        pass
+        self.display.invert(0)
     
     def physics(self):
         global musicPlaying
@@ -93,20 +111,39 @@ class creation:
             self.ballVel[1] = -self.ballVel[1]
             hit = True
             #direction of bounce
-            if (self.paddlePos - self.ballPos[0] > 0):
-                self.ballVel[0] = -abs(self.ballVel[0])
-            else:
-                self.ballVel[0] = abs(self.ballVel[0])
+            p1 = [self.paddlePos, 5]
+            p2 = [self.ballPos[0], 0]
+            #calculate angle from p1 to p2
+            angle = math.atan2(p2[1] - p1[1], p2[0] - p1[0])
+            #turn angle into vector
+            self.ballVel[0] = math.cos(angle) * 2
+            self.ballVel[1] = math.sin(angle) * 2
+            #normalize vector
+            length = math.sqrt((self.ballVel[0] * self.ballVel[0]) + (self.ballVel[1] * self.ballVel[1]))
+            self.ballVel[0] = self.ballVel[0] / length
+            self.ballVel[1] = self.ballVel[1] / length
+            #scale vector by self.speed
+            self.ballVel[0] = int(self.ballVel[0] * self.speed)
+            self.ballVel[1] = int(self.ballVel[1] * self.speed)
+
+            # if (self.paddlePos - self.ballPos[0] > 0):
+            #     self.ballVel[0] = -abs(self.ballVel[0])
+            # else:
+            #     self.ballVel[0] = abs(self.ballVel[0])
             self.ballPos[0] = prePos[0] + self.ballVel[0]
             
         #bricks
-        brick = [int(self.ballPos[0] / 16), int(self.ballPos[1] / 8)]
+        brick = [int(self.ballPos[0] / 16), int(self.ballPos[1] / 8) + round((self.mapHeight - 24 - self.vert) / 8)]
         if (brick[1] < len(self.bricks) and brick[0] < len(self.bricks[0])):
             if (self.bricks[brick[1]][brick[0]] > 0):
-                self.display.fill_rect(brick[0] * 16, brick[1] * 8, 16, 8, 1)
+                self.display.fill_rect(brick[0] * 16, brick[1] * 8 + round(self.vert), 16, 8, 1)
                 #utime.sleep(1)
                 
-                self.bricks[brick[1]][brick[0]] = 0
+                self.bricks[brick[1]][brick[0]] = self.bricks[brick[1]][brick[0]] - 1
+                if (self.bricks[brick[1]][brick[0]] == 0):
+                    self.bricksRemaining = self.bricksRemaining - 1
+                self.display.invert(1)
+                self.invertTimer = 5
                 hit = True
                 #find the side hit
                 middle = [(brick[0] * 16) + 8, (brick[1] * 8) + 4]
@@ -125,20 +162,23 @@ class creation:
             except Exception:
                 pass
             
-        #lose
+        #ball fall out of bottom
         if (self.ballPos[1] > self.display.height):
-            musicPlaying = False
-            utime.sleep(0.3) #Sleep to be sure other thread has ended
-            self.__init__(self.display, self.controller)
-            
+            self.ballVel = [0, 0]
+            self.deathTimer = 40
             
     
     def drawBall(self):
-        self.display.fill_rect(self.ballPos[0] - 2, self.ballPos[1] - 2, 4, 4, 1)
+        # self.display.fill_rect(self.ballPos[0] - 2, self.ballPos[1] - 2, 4, 4, 1)
+        self.display.ellipse(self.ballPos[0], self.ballPos[1], 2, 2, 1, True)
     
     def drawPaddle(self):
-        self.display.fill_rect(self.paddlePos - int(self.paddleWidth / 2), self.display.height - 6, self.paddleWidth, 4, 0)
-        self.display.stroke_rect(self.paddlePos - int(self.paddleWidth / 2), self.display.height - 6, self.paddleWidth, 4, 1)
+        self.display.fill_rect(self.paddlePos - int(self.paddleWidth / 2), self.display.height - 6, self.paddleWidth, 5, 0)
+        self.display.stroke_rect(self.paddlePos - int(self.paddleWidth / 2), self.display.height - 6, self.paddleWidth, 5, 1)
+        self.display.ellipse(self.paddlePos - int(self.paddleWidth / 2), self.display.height - 4, 2, 2, 0, True, 0b0110)
+        self.display.ellipse(self.paddlePos - int(self.paddleWidth / 2), self.display.height - 4, 2, 2, 1, False, 0b0110)
+        self.display.ellipse(self.paddlePos + int(self.paddleWidth / 2) - 1, self.display.height - 4, 2, 2, 0, True, 0b1001)
+        self.display.ellipse(self.paddlePos + int(self.paddleWidth / 2) - 1, self.display.height - 4, 2, 2, 1, False, 0b1001)
         
     def movePaddle(self):
         joy = self.controller.readJoystick()
@@ -147,32 +187,67 @@ class creation:
             self.paddlePos = min(self.paddlePos, self.display.width - int(self.paddleWidth / 2))
             self.paddlePos = max(self.paddlePos, int(self.paddleWidth / 2))
     
-    def drawBrick(self, x, y, damage):
+    def drawBrick(self, x, y, type):
         hashVal = 0.07 + ((math.sin((20 * y * 0.51724) + (x * 0.41723) + (self.frame/ 4)) + 1) / 2.1)
+        if (type == 2):
+            hashVal = 1
+        if (type == 3):
+            hashVal = int(self.frame / 6) % 2
         self.display.fill_rect(x, y, 16, 8, hashVal)
-        #self.display.stroke_rect(x, y, 16, 8, 0)
         
     def drawBricks(self):
-       for y in range(len(self.bricks)):
-            for x in range(len(self.bricks[y])):
-                if (self.bricks[y][x] > 0):
-                    self.drawBrick(x * 16, y * 8, self.bricks[y][x])
-    
+        global musicPlaying
+        for y in range(len(self.bricks)):
+            if (y * 8 + self.vert > -8 and y * 8 + self.vert < self.display.height):
+                for x in range(len(self.bricks[y])):
+                    if (self.bricks[y][x] > 0):
+                        if (y * 8 + self.vert > self.display.height - 8):
+                            #lose
+                            musicPlaying = False
+                            utime.sleep(0.5) #Sleep to be sure other thread has ended
+                            self.__init__(self.display, self.controller)
+
+                        self.drawBrick(x * 16, y * 8 + round(self.vert), self.bricks[y][x])
+        
     def tick(self): #Required, called by main.py in a loop
+        global musicPlaying
         start_time = utime.ticks_us()
         self.frame = self.frame + 1
+        self.vert = self.vert + 0.2
+
+        if (self.deathTimer > 0):
+            self.deathTimer = self.deathTimer - 1
+            if (self.deathTimer == 0):
+                self.ballPos = [self.paddlePos + 4, self.display.height - 4]
+
+        if (self.bricksRemaining == 0):
+            print("Win")
+            musicPlaying = False
+            utime.sleep(0.5) #Sleep to be sure other thread has ended
+            raise Exception("You Win!")
         
-        #Background graphics
-        self.display.fill(0)
-        self.display.blit(self.fbuf, 0, 0 + (self.frame % 128) - 128, 0)
-        self.display.blit(self.fbuf, 0, 0 + (self.frame % 128), 0)
+        if (self.invertTimer > 0):
+            #Background graphics
+            self.display.blit(self.fbuf, 0, 0 + (self.frame % 128) - 128, 0)
+            self.display.blit(self.fbuf, 0, 0 + (self.frame % 128), 0)
+        else:
+            self.display.fill(0)
+
+        if (self.invertTimer > 0):
+            self.frame = self.frame - 3
+            self.vert = self.vert - 0.6
+            self.invertTimer = self.invertTimer - 1
+            if (self.invertTimer == 0):
+                self.display.invert(0)
         
-        self.physics()
+        if (self.deathTimer <= 0):
+            self.physics()
         self.movePaddle()
         
         self.drawBricks()
         self.drawPaddle()
-        self.drawBall()
+        if (self.deathTimer <= 0):
+            self.drawBall()
             
         #Render display
         self.display.show()

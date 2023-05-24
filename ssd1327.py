@@ -119,12 +119,24 @@ class SSD1327:
         self.write_cmd(0x01) # Enable internal VDD regulator
         self.write_cmd(SET_DISP | 0x01)
 
+    def rotate(self, rotate):
+        self.poweroff()
+        self.write_cmd(SET_DISP_OFFSET)
+        self.write_cmd(self.height if rotate else self.offset)
+        self.write_cmd(SET_SEG_REMAP)
+        self.write_cmd(0x42 if rotate else 0x51)
+        self.poweron()
+
     def contrast(self, contrast):
         self.write_cmd(SET_CONTRAST)
         self.write_cmd(contrast) # 0-255
 
-    def invert(self, invert):
-        self.write_cmd(SET_DISP_MODE | (invert & 1) << 1 | (invert & 1)) # 0xA4=Normal, 0xA7=Inverted
+    def invert(self, i):
+        if (i == 0):
+            i = 0xA4
+        else:
+            i = 0xA7
+        self.write_cmd(SET_DISP_MODE | (i & 1) << 1 | (i & 1)) # 0xA4=Normal, 0xA7=Inverted
 
     def show(self):
         self.write_cmd(SET_COL_ADDR)
@@ -143,6 +155,9 @@ class SSD1327:
         
     def fill_rect(self, x, y, width, height, color):
         self.framebuf.fill_rect(x, y, width, height, color)
+
+    def stroke_rect(self, x, y, width, height, color):
+        self.framebuf.rect(x, y, width, height, color) #stroke_rect, or rect with f = False
         
     def blit(self, buffer, x, y, key, palette=None):
         if (palette == None):
@@ -156,6 +171,23 @@ class SSD1327:
 
     def text(self, string, x, y, col=15):
         self.framebuf.text(string, x, y, col)
+
+    def line(self, x1, y1, x2, y2, col):
+        self.framebuf.line(x1, y1, x2, y2, col)
+
+    #Given a list of coordinates, draw an arbitrary (convex or concave) closed polygon at the given x, y location using the given color.
+    #The coords must be specified as a array of integers, e.g. array('h', [x0, y0, x1, y1, ... xn, yn]).
+    #The optional fill parameter can be set to True to fill the polygon. Otherwise just a one pixel outline is drawn.
+    def poly(self, x, y, coords, col, fill=False):
+        self.framebuf.poly(x, y, coords, col, fill)
+
+    #Draw an ellipse at the given location. Radii xr and yr define the geometry; equal values cause a circle to be drawn. The c parameter defines the color.
+    #The optional fill parameter can be set to True to fill the ellipse. Otherwise just a one pixel outline is drawn.
+    #The optional quadrantBits parameter enables drawing to be restricted to certain quadrants of the ellipse.
+    #The LS four bits determine which quadrants are to be drawn, with bit 0 specifying Q1, b1 Q2, b2 Q3 and b3 Q4.
+    #Quadrants are numbered counterclockwise with Q1 being top right.
+    def ellipse(self, x, y, xr, yr, col, fill=False, quadrantBits=0xF):
+        self.framebuf.ellipse(x, y, xr, yr, col, fill, quadrantBits)
 
 
 class SSD1327_I2C(SSD1327):

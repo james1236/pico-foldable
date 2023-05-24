@@ -56,6 +56,9 @@ class display:
             
             oled_i2c = I2C(0, sda=Pin(16), scl=Pin(17),freq=2300000)
             self.oled = WS_OLED_128X128(oled_i2c, addr=int(hex(oled_i2c.scan()[0])))
+
+            print("OLED I2C Address : " + hex(oled_i2c.scan()[0]).upper()) # Print the I2C device address in the command line
+            print("OLED I2C Configuration: " + str(oled_i2c))
             
             self.width = self.oled.width
             self.height = self.oled.height
@@ -152,12 +155,41 @@ class display:
     def scroll(self, x, y):
         if (self.display_type == "SSD1306 Monochrome" or self.display_type == "Waveshare SSD1327 16 Bit Grey"):
             self.oled.scroll(x, y)
+
+    def invert(self, i):
+        self.oled.invert(i)
             
     def stroke_rect(self, x, y, width, height, color):
-        self.fill_rect(0+x,0+y,width,1,color)
-        self.fill_rect(width-1+x,0+y,1,height,color)
-        self.fill_rect(0+x,height-1+y,width,1,color)
-        self.fill_rect(0+x,0+y,1,height,color)
+        if (self.display_type == "SSD1306 Monochrome"):
+            if (color > 0):
+                color = 1
+            self.oled.stroke_rect(x,y,width,height,color)
+            
+        elif (self.display_type == "Pimoroni Pico Display"):
+            c = round(255*color)
+            self.oled.set_pen(c, c, c)
+                
+            self.oled.stroke_rect(x,y,width,height)
+            
+        elif (self.display_type == "Waveshare SSD1327 16 Bit Grey"):
+            
+            self.oled.stroke_rect(x,y,width,height,round(15*color))
+        #self.fill_rect(0+x,0+y,width,1,color)
+        #self.fill_rect(width-1+x,0+y,1,height,color)
+        #self.fill_rect(0+x,height-1+y,width,1,color)
+        #self.fill_rect(0+x,0+y,1,height,color)
+
+    def ellipse(self, x, y, xr, yr, col, fill=False, quadrantBits=0xF):
+        self.oled.ellipse(x, y, xr, yr, round(15*col), fill, quadrantBits)
+
+    def poly(self, x, y, coords, col, fill=False):
+        self.oled.poly(x, y, coords, round(15*col), fill)
+
+    def rotate(self, rot):
+        self.oled.rotate(rot)
+
+    def contrast(self, c):
+        self.oled.contrast(c)
 
 
 #display = display("SSD1306 Monochrome")
@@ -359,6 +391,8 @@ def onSelect():
     display.fill(0)
     display.text("Loading %s..." % creations[cursor].replace('.py',''), 0, 0)
     display.show()
+    if (controller.readButton(0) == 1 and controller.readButton(1) == 1):
+        return
     
     autorunFile = open('autorun', 'w')
     autorunFile.write(str(cursor))
@@ -390,6 +424,8 @@ buttonCooldown = 5
 heldDown = 0
 
 led = Pin(25, Pin.OUT) #Blink led to show it's alive
+
+display.contrast(255)
 
 while True:
     frame = frame + 1
