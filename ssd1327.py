@@ -144,8 +144,11 @@ class SSD1327:
     def fill_rect(self, x, y, width, height, color):
         self.framebuf.fill_rect(x, y, width, height, color)
         
-    def blit(self, buffer, x, y, color):
-        self.framebuf.blit(buffer, x, y, color)
+    def blit(self, buffer, x, y, key, palette=None):
+        if (palette == None):
+            self.framebuf.blit(buffer, x, y, key)
+        else:
+            self.framebuf.blit(buffer, x, y, key, palette)
 
     def scroll(self, dx, dy):
         self.framebuf.scroll(dx, dy)

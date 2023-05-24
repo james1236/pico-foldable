@@ -6,12 +6,14 @@ from machine import Pin, I2C, ADC
 
 from time import sleep
 import os
-
+ 
 import framebuf
 
-#Set to True to disable error handling and throw errors instead
-#Highly reccomended to set to True while programming
-debug = True
+#TRUE = Throw all errors, crashes
+#FALSE = Display errors on the device screen instead and attempt to continue
+# Keep true while debugging to get info like line numbers
+# Keep false for users so that one bug in a creation doesn't crash the whole device
+debug = False
 
 #Stop any previous music PWM
 #from buzzer_music import music
@@ -129,14 +131,17 @@ class display:
         elif (self.display_type == "Waveshare SSD1327 16 Bit Grey"):
             self.oled.pixel(x, y, round(15*color))
             
-    def blit(self, buffer, x, y, color):
+    def blit(self, buffer, x, y, key, palette=None):
         if (self.display_type == "SSD1306 Monochrome"):
-            if (color > 0):
-                color = 1
-            self.oled.blit(buffer, x, y, color)
+            if (key > 0):
+                key = 1
+            self.oled.blit(buffer, x, y, key)
             
         elif (self.display_type == "Waveshare SSD1327 16 Bit Grey"):
-            self.oled.blit(buffer, x, y, round(15*color))
+            if (palette == None):
+                self.oled.blit(buffer, x, y, round(15*key))
+            else:
+                self.oled.blit(buffer, x, y, round(15*key), palette)
             
     def line(self, x1, y1, x2, y2, color):
         if (self.display_type == "SSD1306 Monochrome"):
@@ -339,7 +344,6 @@ def errorHan(e, customMessage=None):
     sleep(5)
     creation = None
     mainMenu = True
-    music().stop()
 
 #Function to load into the selected creation
 def onSelect():
@@ -407,8 +411,12 @@ while True:
                     creation.close()
                 except Exception:
                     pass
+                del creation
                 creation = None
             mainMenu = True
+            autorunFile = open('autorun', 'w')
+            autorunFile.write(str(""))
+            autorunFile.close()
                 
     else:
         heldDown = 0
@@ -441,31 +449,36 @@ while True:
         
         display.fill(0)
         if (not (thumbnails[cursor] is None)):
-            display.blit(thumbnails[cursor],display.width-40,16,0)
+            for thumbx in range(5):
+                for thumby in range(5):
+                    #display.blit(thumbnails[cursor],display.width-40,16,0)
+                    display.blit(thumbnails[cursor],-32 + thumbx*32 + (frame % 32),-32 + thumby*32 + (frame % 32),0)
         
         #List files in creations folder
         ySpacing = 11
         i = 0
         
         #Calculate scroll position of text
+        linesPerScreen = 11
         scroll = 0
-        if (len(creations) > 5):
+        if (len(creations) > linesPerScreen):
             if (cursor > 2):
                 scroll = (cursor-2)*ySpacing
                 
                 #Stop scroll at the bottom
                 if ((len(creations)-1) - cursor < 3):
-                    scroll = (len(creations)-5)*ySpacing
+                    scroll = (len(creations)-linesPerScreen)*ySpacing
         
         scroll = 0 - scroll
 
             
-        for filename in creations:
+        for i in range(len(creations)):
+            display.fill_rect(8,3+(ySpacing*i)-1+scroll,len(names[i])*8+2,ySpacing,0)
             display.text(names[i],9,3+(ySpacing*i)+scroll)
             
             #Selection Border
             if (cursor == i):
-                display.stroke_rect(8,3+(ySpacing*i)-1+scroll,len(filename.replace('.py',''))*8+2,ySpacing,1)
+                display.stroke_rect(8,3+(ySpacing*i)-1+scroll,len(names[i])*8+2,ySpacing,1)
             
             i = i + 1
         

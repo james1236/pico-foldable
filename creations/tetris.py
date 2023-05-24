@@ -83,7 +83,7 @@ pieces = (
 
 class description:
     name = "Tetris"
-    thumbnail = bytearray(b"\xff\xff\xff\xff\x80\x00\x00\x01\x80\x00\x00\x01\x80\x00\x00\x01\x80\x00\x00\x01\x80\x00\x00\x01\xaa\xd5\x50\x01\x9f\xef\xf8\x01\xbf\xf7\xf0\x01\x9f\xef\xf8\x01\xbf\xf7\xf0\x01\x9f\xef\xf8\x01\xbf\xf7\xf0\x01\x9f\xef\xf8\x01\xbf\xf7\xf0\x01\x95\x2a\xa8\x01\x80\x15\x56\xa9\x80\x0f\xfb\xfd\x80\x1f\xf7\xf9\x80\x0f\xfb\xfd\x80\x1f\xf7\xf9\x80\x0f\xfb\xfd\x80\x1f\xf7\xf9\x80\x0f\xfb\xfd\x80\x1f\xf7\xf9\x80\x0a\xab\x55\x80\x00\x00\x01\x80\x00\x00\x01\x80\x00\x00\x01\x80\x00\x00\x01\x80\x00\x00\x01\xff\xff\xff\xff")
+    thumbnail = bytearray(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x2a\xd5\x50\x00\x1f\xef\xf8\x00\x3f\xf7\xf0\x00\x1f\xef\xf8\x00\x3f\xf7\xf0\x00\x1f\xef\xf8\x00\x3f\xf7\xf0\x00\x1f\xef\xf8\x00\x3f\xf7\xf0\x00\x15\x2a\xa8\x00\x00\x15\x56\xa8\x00\x0f\xfb\xfc\x00\x1f\xf7\xf8\x00\x0f\xfb\xfc\x00\x1f\xf7\xf8\x00\x0f\xfb\xfc\x00\x1f\xf7\xf8\x00\x0f\xfb\xfc\x00\x1f\xf7\xf8\x00\x0a\xab\x54\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
 
 class creation:
     def __init__(self, display, controller, *args):
@@ -167,12 +167,36 @@ class creation:
         if (linesCleared > 0):
             #Calc score
             if (linesCleared == 1):
+                try:
+                    mySong.arpnote = 0
+                    mySong.playingNotes = ["A4"]
+                    mySong.playingDurations = [5]
+                except Exception:
+                    pass
                 score = 40
             elif (linesCleared == 2):
+                try:
+                    mySong.arpnote = 0
+                    mySong.playingNotes = ["A4", "E5"]
+                    mySong.playingDurations = [5, 5]
+                except Exception:
+                    pass
                 score = 100
             elif (linesCleared == 3):
+                try:
+                    mySong.arpnote = 0
+                    mySong.playingNotes = ["A4", "E5", "A5"]
+                    mySong.playingDurations = [5, 5, 5]
+                except Exception:
+                    pass
                 score = 300
             else:
+                try:
+                    mySong.arpnote = 0
+                    mySong.playingNotes = ["A4", "E5", "A5", "C#6"]
+                    mySong.playingDurations = [5, 5, 5, 5]
+                except Exception:
+                    pass
                 score = 1200
             
             self.score = self.score + (score*(self.level+1))
@@ -213,7 +237,14 @@ class creation:
             
             #Redraw board since lines were cleared
             self.drawBoard()
-        
+        else:
+            try:
+                mySong.arpnote = 0
+                mySong.playingNotes = ["A2"]
+                mySong.playingDurations = [2]
+            except Exception:
+                pass
+            
         #Take new piece
         self.pieceRotation = 0
         self.piecePos = (4,19)
@@ -427,4 +458,3 @@ class creation:
         
         while (utime.ticks_us() - start_time < 20000):
             pass
-
