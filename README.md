@@ -16,7 +16,7 @@ It is powered by a 3.7v LiPo battery through the adafruit Powerboost 500c rechar
 
 ![image](https://github.com/james1236/pico-foldable/assets/32351696/fb83f271-5d0a-4dfd-a70e-ba5e97ff7ab7)
 
-Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.stl).
+Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.stl). Inspired by <a href="https://www.youtube.com/watch?v=aZc5gUKcRZA">N-O-D-E</a>
 
 
 ### Parts
@@ -28,7 +28,7 @@ Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.st
 |Female MicroUSB Breakout Board|1|
 |520-614 Rainbow Ribbon Cable 10 Way (Squires Tools - conductor spacing 0.05in, conductor - 7/0.127mm tin plated copper, 1A 300V per conductor)|1|
 |3mm dia x 1mm thick Neodynium magnets with 0.13kg pull|4|
-|<a href="https://www.waveshare.com/1.5inch-OLED-Module.htm">128x128, Waveshare 1.5inch OLED display Module I2C Mode SSD1327</a>|1|
+|<a href="https://www.waveshare.com/1.5inch-OLED-Module.htm">1.5inch OLED Display Module, 128x128 Pixels, 16 Gray Scale, SPI/I2C Interface</a>|1|
 |<a href="https://www.sparkfun.com/products/9426">Joystick - Sparkfun COM-09426</a>|1|
 |Momentary Tactile PCB Push Buttons 6mm x 6mm|2|
 |3.7V 500mAh Lipo Lithium Polymer Battery - GPS Drone EHAD702035 (Dimensions approx 37 mm x 21 mm x 8mm) |1|
