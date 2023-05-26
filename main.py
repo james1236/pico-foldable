@@ -24,6 +24,7 @@ debug = False
 class display:
     def __init__(self, display_type):
         self.display_type = display_type
+        self.skippedFrames = 0
         
         if (self.display_type == "SSD1306 Monochrome"):
             width = 128
@@ -54,7 +55,7 @@ class display:
             
             from ssd1327 import WS_OLED_128X128
             
-            oled_i2c = I2C(0, sda=Pin(16), scl=Pin(17),freq=2300000)
+            oled_i2c = I2C(0, sda=Pin(16), scl=Pin(17),freq=3000000) #2300000
             self.oled = WS_OLED_128X128(oled_i2c, addr=int(hex(oled_i2c.scan()[0])))
 
             print("OLED I2C Address : " + hex(oled_i2c.scan()[0]).upper()) # Print the I2C device address in the command line
@@ -85,7 +86,10 @@ class display:
         
     def show(self):
         if (self.display_type == "SSD1306 Monochrome" or self.display_type == "Waveshare SSD1327 16 Bit Grey"):
-            self.oled.show()
+            try:
+                self.oled.show()
+            except OSError as e:
+                self.skippedFrames = self.skippedFrames + 1
             
         elif (self.display_type == "Pimoroni Pico Display"):
             self.oled.update()
@@ -190,7 +194,12 @@ class display:
 
     def contrast(self, c):
         self.oled.contrast(c)
+    
+    def poweron(self):
+        self.oled.poweron()
 
+    def poweroff(self):
+        self.oled.poweroff()
 
 #display = display("SSD1306 Monochrome")
 #display = display("Pimoroni Pico Display") #WIP
@@ -351,6 +360,7 @@ def errorHan(e, customMessage=None):
     e = repr(e)
     print(e)
     print("Set debug = True in main.py to throw exceptions...")
+    print("Skipped frames: " + str(display.skippedFrames))
     
     #Split exception string into screen width strings
     n = int(display.width/8)
@@ -441,6 +451,7 @@ while True:
             heldDown = 0
             buttonCooldowns[0] = 15
             buttonCooldowns[1] = 15
+            print("Skipped frames: " + str(display.skippedFrames))
             
             if (not(creation is None)):
                 try:

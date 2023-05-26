@@ -80,6 +80,8 @@ pieces = (
     ),
 )
 
+pieceCols = [0.1, 0.25, 0.4, 1, 0.6, 0.75, 0.85]
+
 
 class description:
     name = "Tetris"
@@ -141,6 +143,9 @@ class creation:
         
         self.display.show()
         
+        self.but = [0, 0]
+        self.butPrev = [0, 0]
+        
     def close(self): #Called by main.py when it must exit back to main menu
         global musicPlaying
         #mySong.stop()
@@ -153,7 +158,12 @@ class creation:
         y = 0
         linesCleared = 0
         while ((20 - linesCleared) > y):
-            if (sum(self.board[y]) == 10):
+            segs = 0
+            for e in self.board[y]:
+                if (e > 0):
+                    segs = segs + 1
+                
+            if (segs == 10):
                 self.board.pop(y)
                 y = y - 1
                 linesCleared = linesCleared + 1
@@ -325,7 +335,7 @@ class creation:
                 if (0 <= x <= 9 and 0 <= y):
                     if (y <= 19):
                         #Place each seg in board
-                        self.board[segTransform[1] + self.piecePos[1]][segTransform[0] + self.piecePos[0]] = 1
+                        self.board[segTransform[1] + self.piecePos[1]][segTransform[0] + self.piecePos[0]] = self.pieceType + 1
                     else:
                         #Game Over
                         #mySong.stop()
@@ -333,8 +343,9 @@ class creation:
                         utime.sleep(0.3) #Sleep to be sure other thread has ended
                         self.__init__(self.display, self.controller)
                     
+            out = [self.piecePos, self.pieceType, self.pieceRotation]
             self.takePiece()
-            return True #collided
+            return out #collided
         
         return False
     
@@ -359,16 +370,31 @@ class creation:
         for y in range(20):
             for x in range(10):
                 if (self.board[y][x] != 0):
-                    self.drawSeg(x, y, 1)
+                    self.drawSeg(x, y, pieceCols[self.board[y][x] - 1])
         
     def tick(self):
         start_time = utime.ticks_us()
         
         self.show = False
         joy = self.controller.readJoystick()
+        self.butPrev = self.but
+        self.but = [self.controller.readButton(0), self.controller.readButton(1)]
         
         if (self.moveCooldown > -5):
             self.moveCooldown = self.moveCooldown - 1
+            
+        #Quickdrop
+        if (self.but[0] == 1 and self.butPrev[0] == 0):
+            self.moveCooldown = self.moveCooldownDefault
+            oldPieceTransform = pieces[self.pieceRotation][self.pieceType]
+            oldPiecePos = self.piecePos
+            
+            while ((out := self.step()) == False):
+                pass
+            
+            self.drawPiece(oldPieceTransform, oldPiecePos, 0)
+            self.drawPiece(pieces[out[2]][out[1]], out[0], pieceCols[out[1]])
+            self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, pieceCols[self.pieceType])
         
         #Out of deadzone
         if (joy[2]):
@@ -408,7 +434,7 @@ class creation:
                         #Move and redraw piece
                         self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, 0)
                         self.piecePos = (self.piecePos[0] + movement,self.piecePos[1])
-                        self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, 1)
+                        self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, pieceCols[self.pieceType])
 
                 else:
                     if (y > 0):
@@ -421,7 +447,7 @@ class creation:
                             
                             if (self.rotate(1)):
                                 self.drawPiece(oldPieceTransform, oldPiecePos, 0)
-                                self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, 1)
+                                self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, pieceCols[self.pieceType])
                     else:
                         #down
                         #Softdrop
@@ -439,12 +465,12 @@ class creation:
             oldPiecePos = self.piecePos
             
             #If, after step(), a new piece wasn't drawn
-            if (not self.step()):
+            if (self.step() == False):
                 #Clear old piece
                 self.drawPiece(oldPieceTransform, oldPiecePos, 0)
             
             #Draw new piece
-            self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos)
+            self.drawPiece(pieces[self.pieceRotation][self.pieceType], self.piecePos, pieceCols[self.pieceType])
             
         
         if (self.show):

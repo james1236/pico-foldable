@@ -73,14 +73,16 @@ class creation:
         mySong = music(song,True,4)
         musicPlaying = True
         
-        
         #Run music on second thread
         musicThreadInstance = _thread.start_new_thread(musicThread, ())
+        
+        self.display.contrast(255)
         
     def close(self): #Optional, called by main.py when it must exit back to main menu
         global musicPlaying
         musicPlaying = False
         self.display.invert(0)
+        self.display.contrast(255)
     
     def physics(self):
         global musicPlaying
@@ -166,6 +168,7 @@ class creation:
         if (self.ballPos[1] > self.display.height):
             self.ballVel = [0, 0]
             self.deathTimer = 40
+            self.display.contrast(0)
             
     
     def drawBall(self):
@@ -194,6 +197,7 @@ class creation:
         if (type == 3):
             hashVal = int(self.frame / 6) % 2
         self.display.fill_rect(x, y, 16, 8, hashVal)
+        #self.display.stroke_rect(x, y, 16, 8, 0)
         
     def drawBricks(self):
         global musicPlaying
@@ -219,6 +223,7 @@ class creation:
             self.deathTimer = self.deathTimer - 1
             if (self.deathTimer == 0):
                 self.ballPos = [self.paddlePos + 4, self.display.height - 4]
+                self.display.contrast(255)
 
         if (self.bricksRemaining == 0):
             print("Win")
