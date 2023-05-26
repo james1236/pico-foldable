@@ -26,7 +26,7 @@ Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.st
 |Passive Piezo Electric Buzzer|1|
 |<a href="https://www.adafruit.com/product/1944">Adafruit Powerboost 500C</a>|1|
 |Female MicroUSB Breakout Board|1|
-|10 out flexible rainbow ribbon cable|1|
+|520-614 Rainbow Ribbon Cable 10 Way (Squires Tools - conductor spacing 0.05in, conductor - 7/0.127mm tin plated copper, 1A 300V per conductor)|1|
 |3mm dia x 1mm thick Neodynium magnets with 0.13kg pull|4|
 |<a href="https://www.waveshare.com/1.5inch-OLED-Module.htm">128x128, Waveshare 1.5inch OLED display Module I2C Mode SSD1327</a>|1|
 |<a href="https://www.sparkfun.com/products/9426">Joystick - Sparkfun COM-09426</a>|1|
