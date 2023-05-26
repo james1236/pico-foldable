@@ -31,7 +31,7 @@ Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.st
 |<a href="https://www.waveshare.com/1.5inch-OLED-Module.htm">128x128, Waveshare 1.5inch OLED display Module I2C Mode SSD1327</a>|1|
 |<a href="https://www.sparkfun.com/products/9426">Joystick - Sparkfun COM-09426</a>|1|
 |Momentary Tactile PCB Push Buttons 6mm x 6mm|2|
-|500mAh 3.7V LiPo Battery|1|
+|3.7V 500mAh Lipo Lithium Polymer Battery - GPS Drone EHAD702035 (Dimensions approx 37 mm x 21 mm x 8mm) |1|
 |500 Ohm Resistor (for reducing buzzer volume)|1|
 
 ### Ribbon Cable Wires
