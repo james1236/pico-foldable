@@ -78,8 +78,8 @@ Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.st
 |Pico pin 1 (GP0)|500 ohm resistor -> buzzer (ribbon wire 3)|
 |Pico pin 19 (GP14)|Left button (ribbon wire 4)|
 |Pico pin 20 (GP15)|Right button (ribbon wire 5)|
-|Pico pin 33 (ADC0)|Joystick X (ribbon wire 6)|
-|Pico pin 34 (ADC1)|Joystick Y (ribbon wire 7)|
+|Pico pin 31 (ADC0)|Joystick X (ribbon wire 6)|
+|Pico pin 32 (ADC1)|Joystick Y (ribbon wire 7)|
 |Pico pin 39 (VSYS)|VCC (ribbon wire 8)|
 |Pico pin 21 (GP16)|Display SDA (DIN)|
 |Pico pin 22 (GP17)|Display SCK (CLK)|
