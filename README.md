@@ -16,6 +16,8 @@ It is powered by a 3.7v LiPo battery through the adafruit Powerboost 500c rechar
 
 ![image](https://github.com/james1236/pico-foldable/assets/32351696/fb83f271-5d0a-4dfd-a70e-ba5e97ff7ab7)
 
+![image](./schematic.svg)
+
 Printed using PLA on an Ender 3, 3D model [here](./complete%20pico%20foldable.stl). Inspired by <a href="https://www.youtube.com/watch?v=aZc5gUKcRZA">N-O-D-E</a>
 
 
